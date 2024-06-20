@@ -5,10 +5,10 @@ import OpenAI from 'openai'
 
 import { prompts } from '@/app/lib/constants/prompts';
 
-async function checkExistingMotivators(frase: string): Promise<boolean> {
-    // Check if the frase already exists in the motivators table
-    const existingMotivators = await sql<{ frase: string }[]>`
-        SELECT * FROM motivators WHERE frase = ${frase}
+async function checkExistingMotivators(phrase: string): Promise<boolean> {
+    // Check if the phrase already exists in the motivators table
+    const existingMotivators = await sql<{ phrase: string }[]>`
+        SELECT * FROM motivators WHERE phrase = ${phrase}
     `;
     
     return existingMotivators.rowCount > 0;
@@ -61,13 +61,13 @@ async function generateUniqueMotivator(maxAttempts: number = 5): Promise<string>
 }
 
 
-async function saveMotivatorToDB(frase: string) {
+async function saveMotivatorToDB(phrase: string) {
     // Insert data into the database
     noStore()
     try {
         await sql`
-        INSERT INTO motivators (frase, created_at)
-        VALUES (${frase}, NOW())
+        INSERT INTO motivators (phrase, created_at)
+        VALUES (${phrase}, NOW())
       `;
     } catch (error) {
         console.log('error:', error)
